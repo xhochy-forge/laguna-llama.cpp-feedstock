@@ -14,6 +14,8 @@ github:
 github_actions:
   upload_packages: false
   triggers: [push, pull_request]
+  store_build_artifacts: true
+  artifact_retention_days: 14
 test: native_and_emulated
 provider:
   win_64: github_actions
@@ -21,3 +23,4 @@ provider:
   osx_arm64: github_actions
 workflow_settings:
   free_disk_space: quick
+  store_build_artifacts: true
