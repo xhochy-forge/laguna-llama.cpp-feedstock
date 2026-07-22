@@ -12,6 +12,8 @@ package:
 source:
   git: https://github.com/poolsideai/llama.cpp
   rev: "04b2b72cb54048ead292884adbe11f284e3ec950"
+  patches:
+    - fix_speculative_isfinite.patch
 
 build:
   # See https://conda-forge.org/docs/user/tipsandtricks/#installing-cuda-enabled-packages-like-tensorflow-and-pytorch
