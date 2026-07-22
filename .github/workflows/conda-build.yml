@@ -128,7 +128,7 @@ jobs:
             os: windows
             pagefile_size: 0
             resize_partitions: False
-            runs_on: ['namespace-profile-8cpu-on-win-64']
+            runs_on: ['windows-2022']
             tools_install_dir: D:\Miniforge
           - CONFIG: win_64_cuda_compiler_version13.0
             STORE_BUILD_ARTIFACTS: False
@@ -139,7 +139,7 @@ jobs:
             os: windows
             pagefile_size: 0
             resize_partitions: False
-            runs_on: ['namespace-profile-8cpu-on-win-64']
+            runs_on: ['windows-2022']
             tools_install_dir: D:\Miniforge
           - CONFIG: win_64_cuda_compiler_versionNone
             STORE_BUILD_ARTIFACTS: False
@@ -150,7 +150,7 @@ jobs:
             os: windows
             pagefile_size: 0
             resize_partitions: False
-            runs_on: ['namespace-profile-8cpu-on-win-64']
+            runs_on: ['windows-2022']
             tools_install_dir: D:\Miniforge
     steps:
 
