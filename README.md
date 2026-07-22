@@ -3,13 +3,13 @@ About llama.cpp-feedstock
 
 Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/llama.cpp-feedstock/blob/main/LICENSE.txt)
 
-Home: https://github.com/ggml-org/llama.cpp
+Home: https://github.com/poolsideai/llama.cpp/tree/laguna
 
 Package license: MIT
 
-Summary: Port of Facebook's LLaMA model in C/C++
+Summary: Port of Facebook's LLaMA model in C/C++ (build of https://github.com/poolsideai/llama.cpp/tree/laguna)
 
-Development: https://github.com/ggml-org/llama.cpp
+Development: https://github.com/poolsideai/llama.cpp/tree/laguna
 
 Current build status
 ====================
@@ -21,31 +21,6 @@ Current build status
       <a href="https://github.com/conda-forge/llama.cpp-feedstock/actions/workflows/conda-build.yml">
         <img src="https://github.com/conda-forge/llama.cpp-feedstock/actions/workflows/conda-build.yml/badge.svg?event=push&branch=main">
       </a>
-    </td>
-  </tr>
-    
-  <tr>
-    <td>Azure</td>
-    <td>
-      <details>
-        <summary>
-          <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=20871&branchName=main">
-            <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/llama.cpp-feedstock?branchName=main">
-          </a>
-        </summary>
-        <table>
-          <thead><tr><th>Variant</th><th>Status</th></tr></thead>
-          <tbody><tr>
-              <td>osx_64</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=20871&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/llama.cpp-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_" alt="variant">
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </details>
     </td>
   </tr>
 </table>
@@ -171,10 +146,5 @@ In order to produce a uniquely identifiable distribution:
 Feedstock Maintainers
 =====================
 
-* [@frankier](https://github.com/frankier/)
-* [@jjerphan](https://github.com/jjerphan/)
-* [@jonashaag](https://github.com/jonashaag/)
-* [@pavelzw](https://github.com/pavelzw/)
-* [@traversaro](https://github.com/traversaro/)
 * [@xhochy](https://github.com/xhochy/)
 
