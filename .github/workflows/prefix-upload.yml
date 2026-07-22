@@ -1,0 +1,40 @@
+name: Upload to prefix.dev
+on:
+  workflow_run:
+    workflows: ["Build conda package"]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  id-token: write   # OIDC token for trusted publishing
+  actions: read     # download artifacts from the build run
+
+jobs:
+  upload:
+    if: >-
+      ${{ github.event.workflow_run.conclusion == 'success' &&
+          github.event.workflow_run.event == 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          pattern: conda_pkgs_*
+          path: artifacts
+
+      - name: Extract package archives
+        run: |
+          shopt -s globstar nullglob
+          for z in artifacts/**/*.zip; do
+            unzip -q -o "$z" -d extracted
+          done
+
+      - uses: prefix-dev/setup-pixi@a09b6247153796b190642a2b53fac4241043cf6f # v0.10.0
+
+      - name: Upload packages to prefix.dev
+        run: |
+          shopt -s globstar nullglob
+          for file in extracted/**/*.conda; do
+            pixi exec rattler-build upload prefix --channel inference-extensions "$file"
+          done
