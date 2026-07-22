@@ -1,7 +1,7 @@
 context:
   name: llama.cpp
-  version: "10003"
-  build: 1
+  version: "2026.07.21"
+  build: 0
   # ensure arm_variant_type gets detected as a used variable
   touch_arm_variant_type: ${{ arm_variant_type if (linux and aarch64) else "None" }}
 
@@ -10,14 +10,14 @@ package:
   version: ${{ version }}
 
 source:
-  url: https://github.com/ggml-org/${{ name }}/archive/b${{ version ~ "" | split(".") | list | last }}.tar.gz
-  sha256: 592a7c3ba3f8cb0fbb380b7c1be2b4bada97e6a1744c1b9d6424923d522acdc5
+  git: https://github.com/poolsideai/llama.cpp
+  rev: "04b2b72cb54048ead292884adbe11f284e3ec950"
 
 build:
   # See https://conda-forge.org/docs/user/tipsandtricks/#installing-cuda-enabled-packages-like-tensorflow-and-pytorch
   # Similar to https://github.com/conda-forge/jaxlib-feedstock/blob/4471f8d7b0096942f228a9c5a4324bfa75139e22/recipe/recipe.yaml#L22
   number: ${{ build if cuda_compiler_version == "None" else build + 200 }}
-  string: '{%- if cuda_compiler_version != "None" -%}cuda${{ cuda_compiler_version | replace(".", "") }}_h${{ hash }}_${{ build }}{%- elif (osx and x86_64) or cuda_compiler_version == "None" -%}cpu_${{ blas_impl }}_h${{ hash }}_${{ build }}{%- elif osx and arm64 -%}mps_h${{ hash }}_${{ build }}{%- endif -%}'
+  string: 'laguna_{%- if cuda_compiler_version != "None" -%}cuda${{ cuda_compiler_version | replace(".", "") }}_h${{ hash }}_${{ build }}{%- elif (osx and x86_64) or cuda_compiler_version == "None" -%}cpu_${{ blas_impl }}_h${{ hash }}_${{ build }}{%- elif osx and arm64 -%}mps_h${{ hash }}_${{ build }}{%- endif -%}'
 
   script:
     - if: unix
@@ -327,17 +327,12 @@ tests:
                 - cuda-version ${{ cuda_compiler_version }}
 
 about:
-  homepage: https://github.com/ggml-org/llama.cpp
-  repository: https://github.com/ggml-org/llama.cpp
-  summary: Port of Facebook's LLaMA model in C/C++
+  homepage: https://github.com/poolsideai/llama.cpp/tree/laguna
+  repository: https://github.com/poolsideai/llama.cpp/tree/laguna
+  summary: Port of Facebook's LLaMA model in C/C++ (build of https://github.com/poolsideai/llama.cpp/tree/laguna)
   license: MIT
   license_file: LICENSE
 
 extra:
   recipe-maintainers:
-    - traversaro
-    - jjerphan
-    - jonashaag
-    - frankier
-    - pavelzw
     - xhochy
