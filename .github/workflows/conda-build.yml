@@ -25,8 +25,9 @@ jobs:
       matrix:
         include:
           - CONFIG: linux_64_c_stdlib_version2.17cuda_compiler_version12.9
+            CONFIG_SHORT: linux_64_c_stdlib_version2.17cuda_compil_hd7918865
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma10
-            STORE_BUILD_ARTIFACTS: False
+            STORE_BUILD_ARTIFACTS: True
             UPLOAD_PACKAGES: False
             build_workspace_dir: build_artifacts
             docker_run_args: 
@@ -37,8 +38,9 @@ jobs:
             runs_on: ['ubuntu-latest']
             tools_install_dir: ~/miniforge3
           - CONFIG: linux_64_c_stdlib_version2.17cuda_compiler_versionNone
+            CONFIG_SHORT: linux_64_c_stdlib_version2.17cuda_compil_he55e7c14
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma10
-            STORE_BUILD_ARTIFACTS: False
+            STORE_BUILD_ARTIFACTS: True
             UPLOAD_PACKAGES: False
             build_workspace_dir: build_artifacts
             docker_run_args: 
@@ -49,8 +51,9 @@ jobs:
             runs_on: ['ubuntu-latest']
             tools_install_dir: ~/miniforge3
           - CONFIG: linux_64_c_stdlib_version2.28cuda_compiler_version13.0
+            CONFIG_SHORT: linux_64_c_stdlib_version2.28cuda_compil_h282d3825
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma10
-            STORE_BUILD_ARTIFACTS: False
+            STORE_BUILD_ARTIFACTS: True
             UPLOAD_PACKAGES: False
             build_workspace_dir: build_artifacts
             docker_run_args: 
@@ -61,8 +64,9 @@ jobs:
             runs_on: ['ubuntu-latest']
             tools_install_dir: ~/miniforge3
           - CONFIG: linux_aarch64_arm_variant_typesbsac_stdlib_version2.17cuda_compiler_version12.9
+            CONFIG_SHORT: linux_aarch64_arm_variant_typesbsac_stdl_h6a4a0357
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma10
-            STORE_BUILD_ARTIFACTS: False
+            STORE_BUILD_ARTIFACTS: True
             UPLOAD_PACKAGES: False
             build_workspace_dir: build_artifacts
             docker_run_args: 
@@ -73,8 +77,9 @@ jobs:
             runs_on: ['ubuntu-24.04-arm']
             tools_install_dir: ~/miniforge3
           - CONFIG: linux_aarch64_arm_variant_typesbsac_stdlib_version2.17cuda_compiler_versionNone
+            CONFIG_SHORT: linux_aarch64_arm_variant_typesbsac_stdl_hb891f43d
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma10
-            STORE_BUILD_ARTIFACTS: False
+            STORE_BUILD_ARTIFACTS: True
             UPLOAD_PACKAGES: False
             build_workspace_dir: build_artifacts
             docker_run_args: 
@@ -85,8 +90,9 @@ jobs:
             runs_on: ['ubuntu-24.04-arm']
             tools_install_dir: ~/miniforge3
           - CONFIG: linux_aarch64_arm_variant_typesbsac_stdlib_version2.28cuda_compiler_version13.0
+            CONFIG_SHORT: linux_aarch64_arm_variant_typesbsac_stdl_h1d8a58f0
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma10
-            STORE_BUILD_ARTIFACTS: False
+            STORE_BUILD_ARTIFACTS: True
             UPLOAD_PACKAGES: False
             build_workspace_dir: build_artifacts
             docker_run_args: 
@@ -97,8 +103,9 @@ jobs:
             runs_on: ['ubuntu-24.04-arm']
             tools_install_dir: ~/miniforge3
           - CONFIG: linux_aarch64_arm_variant_typetegrac_stdlib_version2.34cuda_compiler_version12.9
+            CONFIG_SHORT: linux_aarch64_arm_variant_typetegrac_std_h645bfee9
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64:alma10
-            STORE_BUILD_ARTIFACTS: False
+            STORE_BUILD_ARTIFACTS: True
             UPLOAD_PACKAGES: False
             build_workspace_dir: build_artifacts
             docker_run_args: 
@@ -109,7 +116,8 @@ jobs:
             runs_on: ['ubuntu-24.04-arm']
             tools_install_dir: ~/miniforge3
           - CONFIG: osx_arm64_
-            STORE_BUILD_ARTIFACTS: False
+            CONFIG_SHORT: osx_arm64_
+            STORE_BUILD_ARTIFACTS: True
             UPLOAD_PACKAGES: False
             build_workspace_dir: ~/miniforge3/conda-bld
             docker_run_args: 
@@ -119,39 +127,6 @@ jobs:
             resize_partitions: False
             runs_on: ['macos-15']
             tools_install_dir: ~/miniforge3
-          - CONFIG: win_64_cuda_compiler_version12.9
-            STORE_BUILD_ARTIFACTS: False
-            UPLOAD_PACKAGES: False
-            build_workspace_dir: D:\\bld\\
-            docker_run_args: 
-            free_disk_space: quick
-            os: windows
-            pagefile_size: 0
-            resize_partitions: False
-            runs_on: ['windows-2022']
-            tools_install_dir: D:\Miniforge
-          - CONFIG: win_64_cuda_compiler_version13.0
-            STORE_BUILD_ARTIFACTS: False
-            UPLOAD_PACKAGES: False
-            build_workspace_dir: D:\\bld\\
-            docker_run_args: 
-            free_disk_space: quick
-            os: windows
-            pagefile_size: 0
-            resize_partitions: False
-            runs_on: ['windows-2022']
-            tools_install_dir: D:\Miniforge
-          - CONFIG: win_64_cuda_compiler_versionNone
-            STORE_BUILD_ARTIFACTS: False
-            UPLOAD_PACKAGES: False
-            build_workspace_dir: D:\\bld\\
-            docker_run_args: 
-            free_disk_space: quick
-            os: windows
-            pagefile_size: 0
-            resize_partitions: False
-            runs_on: ['windows-2022']
-            tools_install_dir: D:\Miniforge
     steps:
 
     - name: Checkout code
@@ -252,3 +227,79 @@ jobs:
         RATTLER_BUILD_COLOR: always
         RATTLER_BUILD_ENABLE_GITHUB_INTEGRATION: 'true'
         BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
+
+    - name: Determine build outcome
+      # this is to merge the status of the linux/osx/win builds into
+      # something we can easily reuse during artefact generation
+      id: determine-status
+      if: ${{ always() }}
+      shell: bash
+      env:
+        OS: ${{ matrix.os }}
+      run: |
+        if [[ "$OS" == "ubuntu" ]]; then
+          STATUS=${{ steps.build-linux.outcome }}
+        elif [[ "$OS" == "macos" ]]; then
+          STATUS=${{ steps.build-macos.outcome }}
+        elif [[ "$OS" == "windows" ]]; then
+          STATUS=${{ steps.build-windows.outcome }}
+        fi
+        if [ -z "$STATUS" ]; then
+          # steps that never ran will have empty status
+          STATUS="cancelled"
+        fi
+        echo "status=$STATUS" >> $GITHUB_OUTPUT
+
+    - name: Prepare conda build artifacts
+      continue-on-error: true
+      id: prepare-artifacts
+      shell: bash
+      # we do not want to trigger artefact creation if the build was cancelled
+      if: ${{ always() && steps.determine-status.outputs.status != 'cancelled' && matrix.STORE_BUILD_ARTIFACTS }}
+      env:
+        CI: github_actions
+        CONDA_BLD_PATH: ${{ matrix.build_workspace_dir }}
+        CONFIG: ${{ matrix.CONFIG }}
+        CONFIG_SHORT: ${{ matrix.CONFIG_SHORT }}
+        JOB_STATUS: ${{ steps.determine-status.outputs.status }}
+        OS: ${{ matrix.os }}
+      run: |
+        export ARTIFACT_STAGING_DIR="$GITHUB_WORKSPACE"
+        export CI_RUN_ID=$GITHUB_RUN_ID
+        export CONDA_BLD_PATH="${CONDA_BLD_PATH/#~/${HOME}}"
+        export FEEDSTOCK_NAME="$(basename $GITHUB_REPOSITORY)"
+        export MINIFORGE_HOME="${MINIFORGE_HOME/#~/${HOME}}"
+        # Archive everything in CONDA_BLD_PATH except environments
+        # Archive the CONDA_BLD_PATH environments only when the job fails
+        # Use different prefix for successful and failed build artifacts
+        # so random failures don't prevent rebuilds from creating artifacts.
+        if [ $JOB_STATUS == "failure" ]; then
+          export BLD_ARTIFACT_PREFIX="conda_artifacts"
+          export ENV_ARTIFACT_PREFIX="conda_envs"
+        else
+          export BLD_ARTIFACT_PREFIX="conda_pkgs"
+        fi
+        if [ $OS == "windows" ]; then
+          pwsh -Command ". '.scripts/create_conda_build_artifacts.bat'"
+        else
+          ./.scripts/create_conda_build_artifacts.sh
+        fi
+
+    - name: Store conda build artifacts
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      if: ${{ always() && steps.prepare-artifacts.outcome == 'success' }}
+      with:
+        name: ${{ steps.prepare-artifacts.outputs.BLD_ARTIFACT_NAME }}
+        path: ${{ steps.prepare-artifacts.outputs.BLD_ARTIFACT_PATH }}
+        retention-days: 14
+      continue-on-error: true
+
+    - name: Store conda build environment artifacts
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      # only relevant if build failed, see above
+      if: ${{ always() && steps.determine-status.outputs.status == 'failure' && steps.prepare-artifacts.outcome == 'success' }}
+      with:
+        name: ${{ steps.prepare-artifacts.outputs.ENV_ARTIFACT_NAME }}
+        path: ${{ steps.prepare-artifacts.outputs.ENV_ARTIFACT_PATH }}
+        retention-days: 14
+      continue-on-error: true
