@@ -3,13 +3,13 @@ About llama.cpp-feedstock
 
 Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/llama.cpp-feedstock/blob/main/LICENSE.txt)
 
-Home: https://github.com/ggml-org/llama.cpp
+Home: https://github.com/poolsideai/llama.cpp/tree/laguna
 
 Package license: MIT
 
-Summary: Port of Facebook's LLaMA model in C/C++
+Summary: Port of Facebook's LLaMA model in C/C++ (build of https://github.com/poolsideai/llama.cpp/tree/laguna)
 
-Development: https://github.com/ggml-org/llama.cpp
+Development: https://github.com/poolsideai/llama.cpp/tree/laguna
 
 Current build status
 ====================
@@ -171,10 +171,5 @@ In order to produce a uniquely identifiable distribution:
 Feedstock Maintainers
 =====================
 
-* [@frankier](https://github.com/frankier/)
-* [@jjerphan](https://github.com/jjerphan/)
-* [@jonashaag](https://github.com/jonashaag/)
-* [@pavelzw](https://github.com/pavelzw/)
-* [@traversaro](https://github.com/traversaro/)
 * [@xhochy](https://github.com/xhochy/)
 
