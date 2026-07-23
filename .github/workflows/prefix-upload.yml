@@ -30,11 +30,17 @@ jobs:
             unzip -q -o "$z" -d extracted
           done
 
-      - uses: prefix-dev/setup-pixi@a09b6247153796b190642a2b53fac4241043cf6f # v0.10.0
+      - name: Install rattler-build
+        run: |
+          mkdir -p "$HOME/.local/bin"
+          curl -fsSL https://github.com/prefix-dev/rattler-build/releases/latest/download/rattler-build-x86_64-unknown-linux-musl \
+            -o "$HOME/.local/bin/rattler-build"
+          chmod +x "$HOME/.local/bin/rattler-build"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
       - name: Upload packages to prefix.dev
         run: |
           shopt -s globstar nullglob
           for file in extracted/**/*.conda; do
-            pixi exec rattler-build upload prefix --channel inference-extensions "$file"
+            rattler-build upload prefix --channel inference-extensions "$file"
           done
